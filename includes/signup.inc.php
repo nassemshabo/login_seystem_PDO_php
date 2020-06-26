@@ -14,7 +14,7 @@ if(isset($_POST['submit_signup'])){
         header("Location: ../signup.php?error=invildmail&uid=$username");
         exit();
     }else if(!preg_match('/^[a-zA-Z0-9]{5,}$/', $username)) {
-        header("Location: ../signup.php?error=usernameerror&mail=$emai");
+        header("Location: ../signup.php?error=invaliduid&mail=$emai");
         exit();
     }else if ( $pass !== $pass_rep){
         header("Location: ../signup.php?error=passnotsame&mail=$emai&uid=$username");
@@ -22,15 +22,27 @@ if(isset($_POST['submit_signup'])){
     }
     else{
         require ('db.php');
-        $user = "SELECT * from users where username = :uid";
+        $user = "SELECT * from users where username = :uid or email = :mail";
         $stmt = $conn->prepare($user);
         $stmt->execute([
-            "uid" => $username
+            "uid" => $username,
+            "mail" => $emai
         ]);
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
         if ( $row > 0 ) {
-            header("Location: ../signup.php?error=userexist&mail=$emai");
-            exit();
+
+            if($row['username'] == $username ){
+                header("Location: ../signup.php?error=userexist");
+                exit();
+            }else if ($row['email'] == $emai) {
+                header("Location: ../signup.php?error=emailexist");
+                exit();
+            }else {
+                header("Location: ../signup.php?error=emailexist");
+                exit();
+            }
+
+
         }else {
             $hash_pass = password_hash($pass , PASSWORD_DEFAULT);
             $sql = "INSERT INTO users (username , email , password) values(:uid , :email , :pass )";

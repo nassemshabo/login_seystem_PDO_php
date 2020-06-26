@@ -15,10 +15,14 @@ form{
     color: gray;
 }
 
-span {
-    font-size: 20px;
-    color: white;
-}
+
 .profile{
     background-color: cadetblue;
+}
+
+.error {
+    color: red;
+}
+.success {
+    color: green;
 }

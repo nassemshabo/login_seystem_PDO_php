@@ -1,5 +1,24 @@
 <?php
 session_start();
+
+
+if(isset($_GET['error_log'])){
+    switch ($_GET['error_log']) {
+        case "emptyfields":
+            echo "<span style='color: red;'> please fill the inputs </span>";
+            break;
+        case "wrongpassword":
+            echo "<span style='color: red;'> wrong password </span>";
+            break;
+        case "wrongemail":
+            echo "<span style='color: red;'> wrong username and  email</span>";
+            break;
+        default:
+            break;
+}
+
+}
+
 ?>
 <!DOCTYPE html>
 <html>
